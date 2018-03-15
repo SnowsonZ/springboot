@@ -24,14 +24,12 @@ public class SpringBootApplicationTests{
     @Test
     public void test(){
         List<String> list = new ArrayList<>();
-        list.add("a");
-        list.add("b");
-        list.add("v");
+        list.add("to");
+        list.add("JayChou's");
+        list.add("concert");
         stringRedisTemplate.opsForValue().set("productName","concert_ticket");
         stringRedisTemplate.opsForList().leftPushAll("qq",list); // 向redis存入List
-        stringRedisTemplate.opsForList().range("range",1,2).forEach(value -> {
-            logger.debug(value);
-        });
+        stringRedisTemplate.opsForList().range("qq",2,0).forEach(value -> logger.debug(value));
     }
 
     @Before
