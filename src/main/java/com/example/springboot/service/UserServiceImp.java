@@ -27,4 +27,9 @@ public class UserServiceImp implements UserService{
     public List<User> findAllUser(){
         return userDao.findAllUser();
     }
+
+    @Override
+    public void insertUsers(List<User> users) {
+        userDao.insertUsers(users);
+    }
 }

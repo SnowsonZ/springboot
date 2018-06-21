@@ -16,4 +16,6 @@ public interface UserDao{
     User findUserById(@Param("id") long id);
 
     List<User> findAllUser();
+
+    void insertUsers(@Param("users") List<User> users);
 }
