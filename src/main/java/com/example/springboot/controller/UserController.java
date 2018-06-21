@@ -8,6 +8,7 @@ import com.example.springboot.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -25,6 +27,8 @@ public class UserController {
     Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     private UserService userServiceImp;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @GetMapping("/{id}")
     public User findById(@PathVariable(value = "id") long id) throws ResourceNotFound {
@@ -42,6 +46,7 @@ public class UserController {
         user.setName(name);
         user.setPassword(password);
         userServiceImp.insertUser(user);
+        redisTemplate.opsForValue().set(user.getPassword(), user.getName(), 2, TimeUnit.HOURS);
         return "add successful";
     }
 
@@ -61,5 +66,11 @@ public class UserController {
     public String addUsers(@RequestBody ArrayList<User> users) {
         userServiceImp.insertUsers(users);
         return "add successful";
+    }
+
+    @GetMapping("/accessToken")
+    public String getAccessToken(@RequestParam long id) {
+        User user = userServiceImp.findUserById(id);
+        return redisTemplate.opsForValue().get(user.getPassword());
     }
 }
