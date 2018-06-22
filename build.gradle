@@ -64,8 +64,6 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     //fix Annotation Processor
     optional "org.springframework.boot:spring-boot-configuration-processor"
-
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 }
 //fix Annotation Processor
 compileJava.dependsOn(processResources)

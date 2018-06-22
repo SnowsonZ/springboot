@@ -4,11 +4,11 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh">
 <head>
-    <title>我的第一个Spring Boot 程序</title>
+    <title>添加用户</title>
 </head>
 <body>
 <div>
-    <form action="user/add" method="post">
+    <form action="user/add" method="post" enctype="multipart/form-data">
         <table style="align-items: center">
             <tr>
                 <td>姓名：</td>
@@ -19,6 +19,12 @@
                 <td>密码：</td>
                 <td><input name="password"/></td>
             </tr>
+
+            <tr>
+                <td>图片：</td>
+                <td><input type="file" name="avatar"/></td>
+            </tr>
+
             <tr>
                 <td><input type="submit" value="提交"/></td>
             </tr>

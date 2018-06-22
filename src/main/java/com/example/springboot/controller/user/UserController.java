@@ -1,9 +1,9 @@
-package com.example.springboot.controller;
+package com.example.springboot.controller.user;
 
 import com.example.springboot.exception.ResourceNotFound;
 import com.example.springboot.model.User;
-import com.example.springboot.model.Users;
-import com.example.springboot.service.UserService;
+import com.example.springboot.service.user.UserService;
+import com.example.springboot.utils.FileUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -41,12 +42,25 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String addUser(@RequestParam String name, @RequestParam String password) {
+    public @ResponseBody
+    String addUser(@RequestParam String name, @RequestParam String password,
+                   @RequestParam("avatar") MultipartFile file) {
+        //修改图片名称
+        String fileName = "avatar." + file.getOriginalFilename().split("\\.")[1];
+        long img_key = System.currentTimeMillis();
+        String filePath = FileUtils.PATH_IMG_UPLOAD + img_key;
+        try {
+            FileUtils.uploadFile(file.getBytes(), filePath, fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("获取文件字节码出错");
+        }
         User user = new User();
         user.setName(name);
         user.setPassword(password);
+        user.setAvatar(FileUtils.URL_IMG_UPLOAD + img_key + "/" + fileName);
         userServiceImp.insertUser(user);
-        redisTemplate.opsForValue().set(user.getPassword(), user.getName(), 2, TimeUnit.HOURS);
+//        redisTemplate.opsForValue().set(user.getPassword(), user.getName(), 2, TimeUnit.HOURS);
         return "add successful";
     }
 
