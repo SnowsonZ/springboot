@@ -25,7 +25,7 @@ public class FileUtils {
             targetFile.mkdirs();
         }
         FileOutputStream out = new FileOutputStream(filePath.endsWith("/") ?
-                filePath : (filePath + "/") + fileName);
+                (filePath + fileName) : (filePath + "/" + fileName));
         out.write(file);
         out.flush();
         out.close();
