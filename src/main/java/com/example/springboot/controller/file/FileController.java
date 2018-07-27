@@ -49,13 +49,11 @@ public class FileController {
         try {
             FileUtils.uploadFile(file.getBytes(), filePath, photoName);
             String result = "{\"status\":\"upload success!!\"}";
-//            String result = "success...";
             return result;
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("获取文件字节码出错...");
             String result = "{\"status\":\"upload failed...\"}";
-//            String result = "failed...";
             return result;
         }
     }
@@ -74,5 +72,19 @@ public class FileController {
             }
         }
         return "{\"status\":\"upload success...\"}";
+    }
+
+    @PostMapping("lists")
+    public String uploadFileStreamList(@RequestParam("file") MultipartFile file) {
+        String fileKeyPath = System.currentTimeMillis() + "/";
+        String fileName = System.currentTimeMillis() + "." + file.getOriginalFilename().split("\\.")[1];
+        String filePath = FileUtils.PATH_FILE_UPLOAD + fileKeyPath;
+        try {
+            FileUtils.uploadFile(file.getBytes(), filePath, fileName);
+            return "{\"status\":\"upload success...\"}";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"status\":\"upload failed...\"}";
+        }
     }
 }
