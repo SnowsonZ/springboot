@@ -87,4 +87,9 @@ public class UserController {
         User user = userServiceImp.findUserById(id);
         return redisTemplate.opsForValue().get(user.getPassword());
     }
+
+    @GetMapping("/back")
+    public String back() {
+        return null;
+    }
 }

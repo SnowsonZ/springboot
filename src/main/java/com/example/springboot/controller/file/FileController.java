@@ -4,6 +4,8 @@ import com.example.springboot.utils.FileUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +13,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @Author: Snowson
@@ -20,8 +29,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("file")
+@Slf4j
 public class FileController {
 
+    @Value("${tmpsavepath.import-error-path}")
+    private String tempFile;
     Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @PostMapping("uploads")
@@ -85,6 +97,25 @@ public class FileController {
         } catch (Exception e) {
             e.printStackTrace();
             return "{\"status\":\"upload failed...\"}";
+        }
+    }
+
+    @GetMapping("/download")
+    public void downloadFile(@RequestParam("fileName") String fileName,
+                             HttpServletResponse response) {
+        response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
+        //输出流
+        try (OutputStream os = response.getOutputStream()) {
+            File file = new File(  tempFile + "/" + fileName);
+            FileInputStream is = new FileInputStream(file);
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+
+            os.write(buffer);
+            os.flush();
+        } catch (Exception e) {
+            log.error("downloadErrorFile error, case: {}", e.getMessage());
         }
     }
 }

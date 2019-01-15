@@ -64,6 +64,11 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     //fix Annotation Processor
     optional "org.springframework.boot:spring-boot-configuration-processor"
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+
 }
 //fix Annotation Processor
 compileJava.dependsOn(processResources)
