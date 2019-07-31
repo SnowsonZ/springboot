@@ -36,6 +36,11 @@ spring:
         max-idle: 8
         min-idle: 1
     timeout: 60000
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

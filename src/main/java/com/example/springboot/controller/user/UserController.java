@@ -1,7 +1,10 @@
 package com.example.springboot.controller.user;
 
+import com.alibaba.fastjson.JSON;
+import com.example.springboot.controller.user.bean.Meeting;
 import com.example.springboot.exception.ResourceNotFound;
 import com.example.springboot.model.User;
+import com.example.springboot.model.UserApp;
 import com.example.springboot.service.user.UserService;
 import com.example.springboot.utils.FileUtils;
 
@@ -22,6 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -92,4 +101,61 @@ public class UserController {
     public String back() {
         return null;
     }
+
+    @PostMapping("param")
+    public String param(@RequestParam("name") String name) {
+        return name;
+    }
+
+
+    /**
+     * 测试忽略序列化字段
+     *
+     * @return the user app
+     */
+    @GetMapping("transient")
+    public UserApp transientTest() {
+        UserApp userApp = new UserApp();
+        userApp.setName("OA");
+        userApp.setPreferRespTime("1234");
+        log.info("userApp: {}", JSON.toJSONString(userApp));
+
+        return userApp;
+    }
+
+    /**
+     * 测试 LocalDateTime
+     *
+     * @param meeting the meeting
+     * @return meeting
+     */
+    @PostMapping("meeting")
+    public Meeting doMeeting(@RequestBody Meeting meeting) {
+        log.info("{}", JSON.toJSONString(meeting));
+        return meeting;
+    }
+
+    /**
+     * 测试 SerializationFeature.FAIL_ON_EMPTY_BEANS
+     *
+     * @return test
+     */
+    @GetMapping("info")
+    public Test doTest() {
+        Product product = new Product();
+        product.setName("product");
+        return new Test(product);
+    }
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class Test {
+    Product p;
+}
+
+@Data
+class Product {
+    String name;
 }

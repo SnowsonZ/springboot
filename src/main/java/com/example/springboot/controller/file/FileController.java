@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -105,17 +106,16 @@ public class FileController {
                              HttpServletResponse response) {
         response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName));
         //输出流
+        FileInputStream is;
         try (OutputStream os = response.getOutputStream()) {
-            File file = new File(  tempFile + "/" + fileName);
-            FileInputStream is = new FileInputStream(file);
+            File file = new File(tempFile + "/" + fileName);
+            is = new FileInputStream(file);
             byte[] buffer = new byte[is.available()];
             is.read(buffer);
-            is.close();
-
             os.write(buffer);
             os.flush();
-        } catch (Exception e) {
-            log.error("downloadErrorFile error, case: {}", e.getMessage());
+        } catch (IOException e) {
+            log.warn("downloadFile error, case: {}", e.getMessage());
         }
     }
 }

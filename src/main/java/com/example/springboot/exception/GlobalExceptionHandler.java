@@ -30,12 +30,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
                                                              HttpStatus status,WebRequest request){
         if(ex instanceof MethodArgumentTypeMismatchException){
             MethodArgumentTypeMismatchException exception = (MethodArgumentTypeMismatchException)ex;
-            return new ResponseEntity<Object>(new ErrorInfo("param : " + exception.getName() +
-                    " is invalid,please check..."),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorInfo("param : " + exception.getName() +
+                    " is invalid, please check..."),HttpStatus.BAD_REQUEST);
         }else if(ex instanceof TypeMismatchException){
             TypeMismatchException exception = (TypeMismatchException)ex;
-            return new ResponseEntity<Object>(new ErrorInfo("param : " + exception.getPropertyName()
-                    + "is invalid,please check..."),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorInfo("param : " + exception.getPropertyName()
+                    + " is invalid,please check..."),HttpStatus.BAD_REQUEST);
         }else{
             return super.handleExceptionInternal(ex,body,headers,status,request);
         }
